@@ -56,6 +56,9 @@ RUN npm run build
 # Set permissions
 RUN chown -R www-data:www-data /app/storage /app/bootstrap/cache
 
+# *** أضف هذا السطر لضمان صلاحية التنفيذ ***
+# تأكد من أن برنامج FrankenPHP لديه صلاحيات التنفيذ
+RUN chmod +x /usr/local/bin/frankenphp
 # Copy Caddyfile
 COPY Caddyfile /etc/caddy/Caddyfile
 
