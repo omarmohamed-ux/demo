@@ -55,11 +55,9 @@ RUN npm run build
 
 # Set permissions
 RUN chown -R www-data:www-data /app/storage /app/bootstrap/cache
+# فرض صلاحية التنفيذ: هذا يحل مشكلة "Operation not permitted"
+RUN chmod +x /usr/local/bin/frankenphp
 
-# *** أضف هذا السطر لضمان صلاحية التنفيذ ***
-# تأكد من أن برنامج FrankenPHP لديه صلاحيات التنفيذ
-#RUN chmod +x /usr/local/bin/frankenphp
-CMD frankenphp run --config /etc/caddy/Caddyfile
 # Copy Caddyfile
 COPY Caddyfile /etc/caddy/Caddyfile
 
@@ -67,5 +65,21 @@ COPY Caddyfile /etc/caddy/Caddyfile
 EXPOSE 80
 EXPOSE 443
 
-# Start FrankenPHP
-CMD ["frankenphp", "run", "--config", "/etc/caddy/Caddyfile"] 
+# Start FrankenPHP (الأمر الأخير في Dockerfile)
+CMD ["frankenphp", "run", "--config", "/etc/caddy/Caddyfile"]
+# # *** أضف هذا السطر لضمان صلاحية التنفيذ ***
+# # تأكد من أن برنامج FrankenPHP لديه صلاحيات التنفيذ
+# #RUN chmod +x /usr/local/bin/frankenphp
+# CMD frankenphp run --config /etc/caddy/Caddyfile
+# # *** فرض صلاحية التنفيذ لبرنامج frankenphp للجميع ***
+# RUN chmod +x /usr/local/bin/frankenphp
+
+# # Copy Caddyfile
+# COPY Caddyfile /etc/caddy/Caddyfile
+
+# # Expose ports
+# EXPOSE 80
+# EXPOSE 443
+
+# # Start FrankenPHP
+# CMD ["frankenphp", "run", "--config", "/etc/caddy/Caddyfile"] 
