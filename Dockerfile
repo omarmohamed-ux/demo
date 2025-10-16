@@ -58,7 +58,8 @@ RUN chown -R www-data:www-data /app/storage /app/bootstrap/cache
 
 # *** أضف هذا السطر لضمان صلاحية التنفيذ ***
 # تأكد من أن برنامج FrankenPHP لديه صلاحيات التنفيذ
-RUN chmod +x /usr/local/bin/frankenphp
+#RUN chmod +x /usr/local/bin/frankenphp
+CMD frankenphp run --config /etc/caddy/Caddyfile
 # Copy Caddyfile
 COPY Caddyfile /etc/caddy/Caddyfile
 
