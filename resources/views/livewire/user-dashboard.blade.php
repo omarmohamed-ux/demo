@@ -93,6 +93,7 @@
         </form>
     </div>
 </div>
+{{-- كود انك تدخل الاحداثيات بنفسك --}}
 {{-- <script type="text/javascript">
             //  دالة JavaScript للحصول على الموقع وإرساله إلى Livewire
             function getLocationAndCheckIn() {
