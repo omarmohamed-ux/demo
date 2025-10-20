@@ -13,8 +13,8 @@
             <tr>
                 <td style="padding: 8px; border: 1px solid #ddd;">{{ $record->user->name }}</td>
                 <td style="padding: 8px; border: 1px solid #ddd;">{{ $record->created_at->format('Y-m-d') }}</td>
-                <td style="padding: 8px; border: 1px solid #ddd;">{{ $record->check_in ? $record->check_in->format('H:i') : '-' }} </td>
-                <td style="padding: 8px; border: 1px solid #ddd;">{{ $record->check_out ? $record->check_out->format('H:i') : '-' }} </td>
+                <td style="padding: 8px; border: 1px solid #ddd;">{{ $record->check_in ? $record->check_in->format('h:i A') : '-' }} </td>  {{--('H:i') 14:59--}}
+                <td style="padding: 8px; border: 1px solid #ddd;">{{ $record->check_out ? $record->check_out->format('h:i A') : '-' }} </td>
                 <td style="padding: 8px; border: 1px solid #ddd;">
                     {{-- لا نحاول إجراء عمليات حسابية إذا لم يتم تسجيل الخروج بعد. --}}
                     @if ($record->duration !== null)

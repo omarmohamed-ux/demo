@@ -141,3 +141,36 @@
                 }
             }
         </script> --}}
+    {{-- الكود الاصلي --}}
+        {{-- <script type="text/javascript">
+            //  دالة JavaScript للحصول على الموقع وإرساله إلى Livewire
+      function getLocationAndCheckIn() {
+        // عرض رسالة 'جاري التحديد'
+        document.getElementById('geo-status').innerText = 'جاري تحديد موقعك... 🌐';
+        
+        if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition(
+            // في حالة النجاح
+            (position) => {
+              const lat = position.coords.latitude;
+              const lng = position.coords.longitude;
+              
+              document.getElementById('geo-status').innerText = 'تم تحديد الموقع. جاري التحقق من النطاق...';
+              
+              // إرسال الإحداثيات إلى دالة checkIn في Livewire
+              Livewire.dispatch('performCheckIn', { lat: lat, lng: lng }); 
+            },
+            // في حالة فشل الحصول على الموقع (رفض أو خطأ)
+            (error) => {
+              document.getElementById('geo-status').innerText = '🚫 فشل تحديد الموقع: يرجى تمكين الموقع والمحاولة مجدداً.';
+              // عرض رسالة خطأ للمستخدم
+              Livewire.dispatch('sessionMessage', { type: 'error', message: 'يجب السماح بالوصول للموقع لتسجيل الحضور.' });
+            },
+            // خيارات إضافية لدقة الموقع
+            { enableHighAccuracy: true, timeout: 5000, maximumAge: 0 }
+          );
+        } else {
+          document.getElementById('geo-status').innerText = '⚠ المتصفح لا يدعم تحديد الموقع.';
+        }
+      }
+    </script> --}}
