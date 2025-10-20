@@ -8,11 +8,16 @@
                 <th style="padding: 8px; border: 1px solid #ddd;">وقت الدخول</th>
                 <th style="padding: 8px; border: 1px solid #ddd;">وقت الخروج</th>
                 <th style="padding: 8px; border: 1px solid #ddd;"> مده الحضور</th>
+                <th style="padding: 8px; border: 1px solid #ddd;">  اداء المطلوب</th>
             </tr>
             @foreach($records as $record)
             <tr>
+            @php
+                        // افترض أن $record هو سجل الحضور اليومي
+                        $dailyStatus = $this->getDailyStatusAndColor($record);
+                    @endphp
                 <td style="padding: 8px; border: 1px solid #ddd;">{{ $record->user->name }}</td>
-                <td style="padding: 8px; border: 1px solid #ddd;">{{ $record->created_at->format('Y-m-d') }}</td>
+                <td style="padding: 8px; border: 1px solid #ddd;">{{ \Carbon\Carbon::parse($record->created_at)->isoFormat('dddd، D MMMM YYYY') }}</td>
                 <td style="padding: 8px; border: 1px solid #ddd;">{{ $record->check_in ? $record->check_in->format('h:i A') : '-' }} </td>  {{--('H:i') 14:59--}}
                 <td style="padding: 8px; border: 1px solid #ddd;">{{ $record->check_out ? $record->check_out->format('h:i A') : '-' }} </td>
                 <td style="padding: 8px; border: 1px solid #ddd;">
@@ -30,8 +35,11 @@
                         -
                     @endif
                 </td>
+                {{-- عرض حالة اليوم (🟢 تم تحقيق الهدف / 🟡 أقل من المطلوب / 🔴 انتظار الخروج) --}}
+                <td style="padding: 8px; border: 1px solid #ddd;">{{ $dailyStatus['status'] }}</td>
             </tr>
             @endforeach
+
         </table>
         <form method="POST" action="{{ route('logout')}}">
             @csrf 
