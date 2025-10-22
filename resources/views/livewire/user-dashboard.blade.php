@@ -1,51 +1,36 @@
 <div>
     <div>
     <script type="text/javascript">
-            //  دالة JavaScript للحصول على الموقع وإرساله إلى Livewire
-            function getLocationAndCheckIn() {
-                // عرض رسالة 'جاري التحديد'
-                document.getElementById('geo-status').innerText = 'جاري تحديد موقعك... 🌐';
-                
-                if (navigator.geolocation) {
-
-                    const lat = 24.7787270;
-                    const lng = 46.6864610;
-                    
-                    document.getElementById('geo-status').innerText = 'تم تحديد الموقع. جاري التحقق من النطاق...';
-                    
-                    // إرسال الإحداثيات إلى دالة checkIn في Livewire
-                    Livewire.dispatch('performCheckIn', { lat: lat, lng: lng }); 
-                    //طلب تحديد احداثيات المستخدم 
-                    navigator.geolocation.getCurrentPosition(
-
-                        //position
-                        // في حالة النجاح
-                        //(position) => {
-                            //const lat = position.coords.latitude;
-                            //const lng = position.coords.longitude;
-
-                           // const lat = 46.2156;
-                           // const lng = 24.2568;
-                            
-                            //document.getElementById('geo-status').innerText = 'تم تحديد الموقع. جاري التحقق من النطاق...';
-                            
-                            // إرسال الإحداثيات إلى دالة checkIn في Livewire
-                            //Livewire.dispatch('performCheckIn', { lat: lat, lng: lng }); 
-                        //},
-                        // في حالة فشل الحصول على الموقع (رفض أو خطأ)
-                        (error) => {
-                           // document.getElementById('geo-status').innerText = '🚫 فشل تحديد الموقع: يرجى تمكين الموقع والمحاولة مجدداً.';
-                            // عرض رسالة خطأ للمستخدم
-                            //Livewire.dispatch('sessionMessage', { type: 'error', message: 'يجب السماح بالوصول للموقع لتسجيل الحضور.' });
-                            Livewire.dispatch('locationError');
-                        },
-                        // خيارات إضافية لدقة الموقع
-                        //{ enableHighAccuracy: true, timeout: 5000, maximumAge: 0 }
-                    );
-                } else {
-                    document.getElementById('geo-status').innerText = '⚠ المتصفح لا يدعم تحديد الموقع.';
-                }
-            }
+            //  دالة JavaScript للحصول على الموقع وإرساله إلى Livewire
+      function getLocationAndCheckIn() {
+        // عرض رسالة 'جاري التحديد'
+        document.getElementById('geo-status').innerText = 'جاري تحديد موقعك... 🌐';
+        
+        if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition(
+            // في حالة النجاح
+            (position) => {
+              const lat = position.coords.latitude;
+              const lng = position.coords.longitude;
+              
+              document.getElementById('geo-status').innerText = 'تم تحديد الموقع. جاري التحقق من النطاق...';
+              
+              // إرسال الإحداثيات إلى دالة checkIn في Livewire
+              Livewire.dispatch('performCheckIn', { lat: lat, lng: lng }); 
+            },
+            // في حالة فشل الحصول على الموقع (رفض أو خطأ)
+            (error) => {
+              document.getElementById('geo-status').innerText = '🚫 فشل تحديد الموقع: يرجى تمكين الموقع والمحاولة مجدداً.';
+              // عرض رسالة خطأ للمستخدم
+              Livewire.dispatch('sessionMessage', { type: 'error', message: 'يجب السماح بالوصول للموقع لتسجيل الحضور.' });
+            },
+            // خيارات إضافية لدقة الموقع
+            { enableHighAccuracy: true, timeout: 5000, maximumAge: 0 }
+          );
+        } else {
+          document.getElementById('geo-status').innerText = '⚠ المتصفح لا يدعم تحديد الموقع.';
+        }
+      }
     </script>
         {{-- رسائل نجاح أو خطأ (يمكنك إضافة منطق لعرض رسائل الجلسة هنا) --}}
         <div style="margin-bottom: 16px;">
