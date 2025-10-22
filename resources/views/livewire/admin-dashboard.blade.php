@@ -8,7 +8,7 @@
                 <th style="padding: 8px; border: 1px solid #ddd;">وقت الدخول</th>
                 <th style="padding: 8px; border: 1px solid #ddd;">وقت الخروج</th>
                 <th style="padding: 8px; border: 1px solid #ddd;"> مده الحضور</th>
-                <th style="padding: 8px; border: 1px solid #ddd;">  اداء المطلوب</th>
+                <th style="padding: 8px; border: 1px solid #ddd;">  حاله الحضور</th>
             </tr>
             @foreach($records as $record)
             <tr>
