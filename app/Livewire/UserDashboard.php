@@ -46,8 +46,8 @@ class UserDashboard extends Component
     );
       //dd( $distance,$lat,$lng,$workLocation->latitude,$workLocation->longitude);
     
-    //لان داله calculateDistance بتتعامل بالكيلو وليست بالمتر
-    $allowedDistanceMeters = (float) $workLocation->allowed_radius;  ; // تحويل الأمتار إلى كيلومتر
+    //لان داله calculateDistance بتتعامل  بالمتر
+    $allowedDistanceMeters = $workLocation->allowed_radius;  ; // نصف القطر المسموح به بالمتر
      //dd($distance,$allowedDistanceMeters,$distance - $allowedDistanceMeters,$distance > $allowedDistanceMeters);
       
     if ($distance > $allowedDistanceMeters) {
