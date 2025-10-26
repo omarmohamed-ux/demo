@@ -1,44 +1,71 @@
 <div>
     <div>
-    <script type="text/javascript">
-            //  دالة JavaScript للحصول على الموقع وإرساله إلى Livewire
-      function getLocationAndCheckIn() {
-        // عرض رسالة 'جاري التحديد'
-        document.getElementById('geo-status').innerText = 'جاري تحديد موقعك... 🌐';
-        
-        if (navigator.geolocation) {
-          navigator.geolocation.getCurrentPosition(
-            // في حالة النجاح
-            (position) => {
-              const lat = position.coords.latitude;
-              const lng = position.coords.longitude;
-              
-              document.getElementById('geo-status').innerText = 'تم تحديد الموقع. جاري التحقق من النطاق...';
-              
-              // إرسال الإحداثيات إلى دالة checkIn في Livewire
-              Livewire.dispatch('performCheckIn', { lat: lat, lng: lng }); 
-            },
-            // في حالة فشل الحصول على الموقع (رفض أو خطأ)
-            (error) => {
-              document.getElementById('geo-status').innerText = '🚫 فشل تحديد الموقع: يرجى تمكين الموقع والمحاولة مجدداً.';
-              // عرض رسالة خطأ للمستخدم
-              Livewire.dispatch('sessionMessage', { type: 'error', message: 'يجب السماح بالوصول للموقع لتسجيل الحضور.' });
-            },
-            // خيارات إضافية لدقة الموقع
-            { enableHighAccuracy: true, timeout: 5000, maximumAge: 0 }
-          );
-        } else {
-          document.getElementById('geo-status').innerText = '⚠ المتصفح لا يدعم تحديد الموقع.';
-        }
-      }
+        <script type="text/javascript">
+            // متغيرات لتخزين الإحداثيات
+            let storedLat = null;
+            let storedLng = null;
+            // دالة الزر الأول: تجلب وتخزن
+            function getCoordinatesAndStore() {
+                document.getElementById('geo-status').innerText = 'جاري تحديد موقعك... 🌐';
+                
+                if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition(
+                        (position) => {
+                            storedLat = position.coords.latitude; // التخزين في المتغير العام
+                            storedLng = position.coords.longitude; // التخزين في المتغير العام
+                            
+                            document.getElementById('geo-status').innerHTML = 
+                                `
+                                خط العرض (Lat): ${storedLat.toFixed(6)}
+                                خط الطول (Lon): ${storedLng.toFixed(6)}`;
+                        },
+                        (error) => {
+                            document.getElementById('geo-status').innerText = '🚫 فشل تحديد الموقع: يرجى تمكين الموقع.';
+                            storedLat = null; // تفريغ القيمة في حالة الخطأ
+                            storedLng = null;
+                        },
+                        { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
+                    );
+                } else {
+                    document.getElementById('geo-status').innerText = '⚠ المتصفح لا يدعم تحديد الموقع.';
+                }
+            }
+
+            // دالة الزر الثاني: ترسل البيانات المخزنة إلى PHP
+            function sendCoordinatesForComparison() {
+                if (storedLat && storedLng) {
+                    document.getElementById('geo-status').innerText = 'جاري إرسال الإحداثيات للمقارنة...';
+                    // إرسال البيانات إلى دالة Livewire (compareLocation)
+                    Livewire.dispatch('compareLocations', { lat: storedLat, lng: storedLng });
+                } else {
+                    document.getElementById('geo-status').innerText = '⚠️ يرجى أولاً جلب الإحداثيات بالزر الأول.';
+                }
+            }
     </script>
         {{-- رسائل نجاح أو خطأ (يمكنك إضافة منطق لعرض رسائل الجلسة هنا) --}}
         <div style="margin-bottom: 16px;">
             {{-- عرض حالة تحديد الموقع --}}
             <p id="geo-status" class="text-sm text-blue-600 font-semibold"></p>
+            <div style="margin-bottom: 20px;">
+                {{-- الزر الوحيد لجلب وعرض و تخزين الموقع --}}
+                <button type="button" 
+                        onclick="getCoordinatesAndStore();" 
+                        class="bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded shadow-md transition">
+                    جلب إحداثياتي وعرضها
+                </button>
+            </div>
+            <div style="margin-bottom: 20px;">
+                {{-- compareLocationزر المقارنه بين المسافات داله --}}
+                <button type="button" 
+                        onclick="sendCoordinatesForComparison();" 
+                        class="bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded shadow-md transition">
+                      اعرض البعد بيني وبين موقع العمل
+                </button>
+            </div>
+
 
             {{-- أزرار Check in/out --}}
-            @if ($currentAttendance)
+            {{-- @if ($currentAttendance)
                 <button wire:click="checkOut" class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-lg shadow-md transition duration-300 ease-in-out">
                    تسجيل المغادرة الآن
                 </button>
@@ -47,7 +74,7 @@
                 <button onclick="getLocationAndCheckIn();" class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg shadow-md transition duration-300">
                     تسجيل دخول الآن
                 </button>
-            @endif
+            @endif --}}
         </div>
         
         <hr style="margin-bottom: 16px;"> 

@@ -12,6 +12,7 @@ class UserDashboard extends Component
     // المتغير ده بيخزن السجل الحالي لو المستخدم عامل Check in ولسه ما عملش Check out
     public $currentAttendance;
     
+    
     public function mount()
     {
         // نبحث لو في تسجيل دخول مفتوح
@@ -19,15 +20,40 @@ class UserDashboard extends Component
             ->whereNull('check_out')
             ->first();
     }
-
+    #[On('compareLocations')]
+    public function compareLocation($lat , $lng)
+    {
+        if (empty($lat) || empty($lng) || $lat === '0' || $lng === '0')//(!$lat || !$lng)
+            {
+             session()->flash('error', '  فشل استلام الإحداثيات. يرجى السماح بالوصول للموقع ثم المحاولة مرة أخرى.');
+         return;
+        }
+        //  جلب إعدادات موقع العمل (مركز العمل ونصف القطر)
+        $workLocation = Location::find(1); 
+        //  حساب المسافة
+        $distance = $this->calculateDistance(
+        (float)$lat, (float)$lng, 
+        $workLocation->latitude, $workLocation->longitude
+        );
+        $allowedDistanceMeters = $workLocation->allowed_radius;  ; // نصف القطر المسموح به بالمتر
+        // هـ. المقارنة وإرسال رسالة الفلاش
+        if ($distance > $allowedDistanceMeters) {
+        session()->flash('error','🛑 أنت خارج نطاق موقع العمل المحدد. المسافة الحالية: ' . round($distance, 2) . ' متر.');
+        return;
+        } else {   
+            session()->flash('succes','🟢 أنت داخل نطاق موقع العمل المحدد. المسافة الحالية: ' . round($distance, 2) . ' متر.');
+        return;
+        }
+    }
     // دالة لتسجيل الدخول
     //التاكد من احداثيات المستخدم
     #[On('performCheckIn')]//listiner->dispatch	
     public function checkIn($lat = null, $lng = null)
     {   
         //  التحقق من وجود الإحداثيات
-        if (!$lat || !$lng) {
-             session()->flash('error', ' فشل استلام الإحداثيات. يرجى السماح بالوصول للموقع.');
+        if (empty($lat) || empty($lng) || $lat === '0' || $lng === '0')//(!$lat || !$lng)
+            {
+             session()->flash('error', '  فشل استلام الإحداثيات. يرجى السماح بالوصول للموقع ثم المحاولة مرة أخرى.');
          return;
     }
     //  جلب إعدادات موقع العمل (مركز العمل ونصف القطر)
