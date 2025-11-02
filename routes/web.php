@@ -1,5 +1,7 @@
 <?php
-
+use App\Models\Location;
+//Requestكلاس لجلب إعدادات الموقع 
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Livewire\Volt\Volt;
 use App\Livewire\Test;
@@ -54,8 +56,63 @@ Route::middleware(['auth','role:admin'])->group(function(): void{ // 👈 تطب
     Route::get('/admin', AdminDashboard::class)->name('admin.dashboard'); 
     Route::get('/dashboard', AdminDashboard::class)->name('dashboard'); 
 });
+    // دالة لحساب المسافة باستخدام Haversine Formula
+if (! function_exists('calculateDistance')) {
+    function calculateDistance($lat1, $lon1, $lat2, $lon2)
+    {
+        $earthRadius = 6371000; // نصف قطر الأرض متر
+        $dLat = deg2rad($lat2 - $lat1);
+        $dLon = deg2rad($lon2 - $lon1);
 
+        $a = sin($dLat / 2) * sin($dLat / 2) +
+             cos(deg2rad($lat1)) * cos(deg2rad($lat2)) *
+             sin($dLon / 2) * sin($dLon / 2);
 
+        $c = 2 * atan2(sqrt($a), sqrt(1 - $a));
+        return $earthRadius * $c; // المسافة بالمتر
+    }
+}
+
+Route::post('/api/check-location', function (Request $request) {
+    
+    $lat = $request->input('lat');
+    $lng = $request->input('lng');
+    
+    //التحقق من الأمان
+    if (empty($lat) || empty($lng) || $lat === '0' || $lng === '0') {
+        return response()->json(['status' => 'error', 'message' => '🚫 فشل: لم يتم استلام الإحداثيات.'], 400);
+        //بديل session()->flash('error', '🚫 فشل: لم يتم استلام الإحداثيات.');
+    }
+
+    //جلب إعدادات الموقع
+    $workLocation = Location::find(1); 
+    if (!$workLocation) {
+         return response()->json(['status' => 'error', 'message' => '⚠️ لم يتم إعداد إحداثيات مركز العمل.'], 400);
+    }
+
+    // حساب المسافه بالمتر
+    $distance = calculateDistance(
+        (float)$lat, (float)$lng, 
+        $workLocation->latitude, $workLocation->longitude
+    );
+
+    $allowedDistanceMeters = $workLocation->allowed_radius; 
+    $distance_m = round($distance, 2);
+
+    //المقارنة والرد
+    if ($distance > $allowedDistanceMeters) {
+        return response()->json([
+            'status' => 'error',
+            'message' => "🛑 المسافة: {$distance_m} م. أنت خارج النطاق.",
+        ], 200);
+    }
+    //النجاح
+    return response()->json([
+        'status' => 'success',
+        'message' => "🟢 المسافة: {$distance_m} م. أنت داخل النطاق.",
+    ], 200);
+
+})->middleware('auth')->name('api.check.location'); 
 // Route::view('dashboard', 'dashboard')
 //     ->middleware(['auth', 'verified'])
 //     ->name('dashboard');

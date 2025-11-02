@@ -30,17 +30,49 @@
                     document.getElementById('geo-status').innerText = '⚠ المتصفح لا يدعم تحديد الموقع.';
                 }
             }
-
-            // دالة الزر الثاني: ترسل البيانات المخزنة إلى PHP
             function sendCoordinatesForComparison() {
                 if (storedLat && storedLng) {
                     document.getElementById('geo-status').innerText = 'جاري إرسال الإحداثيات للمقارنة...';
-                    // إرسال البيانات إلى دالة Livewire (compareLocation)
-                    Livewire.dispatch('compareLocations', { lat: storedLat, lng: storedLng });
+                    //يرسل مفتاح الامان CSRF    
+                    const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+                    
+                    // :اسم المسار هو 'api.check.location'
+                    fetch("{{ route('api.check.location') }}", { 
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': csrfToken 
+                        },
+                        //تحويل البيانات إلى JSON
+                        body: JSON.stringify({ lat: storedLat, lng: storedLng })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        // عرض النتيجة المستلمة من الخادم
+                        document.getElementById('geo-status').innerText = data.message;
+                        document.getElementById('geo-status').style.color = (data.status === 'success') ? 'green' : 'red';
+                    })
+                    .catch(error => {
+                        document.getElementById('geo-status').innerText = 'حدث خطأ في الاتصال بالخادم.';
+                        document.getElementById('geo-status').style.color = 'red';
+                    });
+
                 } else {
                     document.getElementById('geo-status').innerText = '⚠️ يرجى أولاً جلب الإحداثيات بالزر الأول.';
                 }
             }
+            // دالة الزر الثاني: ترسل البيانات المخزنة إلى PHP
+            //function sendCoordinatesForComparison() {
+              //  if (storedLat && storedLng) {
+               //     document.getElementById('geo-status').innerText = 'جاري إرسال الإحداثيات للمقارنة...';
+                    // إرسال البيانات إلى دالة Livewire (compareLocation)
+                //    Livewire.dispatch('compareLocations', { lat: storedLat, lng: storedLng });
+                    //Livewire.find(document.querySelector('[wire:id]').getAttribute('wire:id'))
+                    //.call('compareLocation', storedLat, storedLng);
+                //} else {
+                 //   document.getElementById('geo-status').innerText = '⚠️ يرجى أولاً جلب الإحداثيات بالزر الأول.';
+                //}
+           // }
     </script>
         {{-- رسائل نجاح أو خطأ (يمكنك إضافة منطق لعرض رسائل الجلسة هنا) --}}
         <div style="margin-bottom: 16px;">
