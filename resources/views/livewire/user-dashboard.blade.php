@@ -1,5 +1,9 @@
 <div>
     <div>
+        <script>
+            // ✅ التعريف الآمن لـ CSRF Token كمتغير عام
+            const csrfToken = "{{ csrf_token() }}";
+        </script>
         <script type="text/javascript">
             // متغيرات لتخزين الإحداثيات
             let storedLat = null;
@@ -32,11 +36,14 @@
             }
             function sendCoordinatesForComparison() {
                 if (storedLat && storedLng) {
+                    console.log("الاحداثيات المخزنة:", storedLat, storedLng);
                     document.getElementById('geo-status').innerText = 'جاري إرسال الإحداثيات للمقارنة...';
                     //يرسل مفتاح الامان CSRF    
-                    const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-                    
+                    console.log(" شغال1:");
+                   // csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
                     // :اسم المسار هو 'api.check.location'
+                    console.log(" 2 شغال:");
+                    console.log("CSRF Token:", csrfToken);
                     fetch("{{ route('api.check.location') }}", { 
                         method: 'POST',
                         headers: {
@@ -201,8 +208,8 @@
                 
                 if (navigator.geolocation) {
 
-                    const lat = 24.783375;//واقف عند المترو
-                    const lng = 46.683176;
+                     lat = 24.783375;//واقف عند المترو
+                     lng = 46.683176;
                     
                     document.getElementById('geo-status').innerText = 'تم تحديد الموقع. جاري التحقق من النطاق...';
                     
@@ -214,11 +221,11 @@
                         //position
                         // في حالة النجاح
                         //(position) => {
-                            //const lat = position.coords.latitude;
-                            //const lng = position.coords.longitude;
+                            // lat = position.coords.latitude;
+                            // lng = position.coords.longitude;
 
-                           // const lat = 46.2156;
-                           // const lng = 24.2568;
+                           //  lat = 46.2156;
+                           //  lng = 24.2568;
                             
                             //document.getElementById('geo-status').innerText = 'تم تحديد الموقع. جاري التحقق من النطاق...';
                             
@@ -251,8 +258,8 @@
           navigator.geolocation.getCurrentPosition(
             // في حالة النجاح
             (position) => {
-              const lat = position.coords.latitude;
-              const lng = position.coords.longitude;
+               lat = position.coords.latitude;
+               lng = position.coords.longitude;
               
               document.getElementById('geo-status').innerText = 'تم تحديد الموقع. جاري التحقق من النطاق...';
               
