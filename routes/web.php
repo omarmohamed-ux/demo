@@ -1,5 +1,6 @@
 <?php
 use App\Models\Location;
+use App\Models\Attendance;
 //Requestكلاس لجلب إعدادات الموقع 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -103,13 +104,19 @@ Route::post('/api/check-location', function (Request $request) {
     if ($distance > $allowedDistanceMeters) {
         return response()->json([
             'status' => 'error',
-            'message' => "🛑 المسافة: {$distance_m} م. أنت خارج النطاق.",
+            'message' => "يرجو تسجيل الحضور من داخل موقع العمل. أنت تبعد مسافة {$distance_m} متر عن الموقع",
         ], 200);
     }
+    Attendance::create([
+        'user_id' => auth()->id(),
+        'check_in' => now(),
+        'check_in_latitude' => $lat, 
+        'check_in_longitude' => $lng, 
+    ]);
     //النجاح
     return response()->json([
         'status' => 'success',
-        'message' => "🟢 المسافة: {$distance_m} م. أنت داخل النطاق.",
+        'message' => 'تم تسجيل الدخول بنجاح من داخل موقع العمل.',
     ], 200);
 
 })->middleware('auth')->name('api.check.location'); 

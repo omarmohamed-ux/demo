@@ -47,10 +47,14 @@ class AdminDashboard extends Component
         }
     }
     public function render()
-    {
-        // هنا بنعرض كل السجلات مع ربطها بالمستخدم (عشان نجيب الاسم)
-        $records = Attendance::with('user')->latest()->get();
-        return view('livewire.admin-dashboard', compact(['records']))
-            ->layout('layouts.app');
-    }
+{
+    // جلب السجلات وترتيبها ثم تجميعها حسب اسم المستخدم
+    $records = Attendance::with('user')
+        ->latest()
+        ->get()
+        ->groupBy('user.name'); // 👈 التجميع حسب اسم المستخدم هنا
+        
+    return view('livewire.admin-dashboard', compact(['records']))
+        ->layout('layouts.app');
+}
 }

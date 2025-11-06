@@ -52,9 +52,21 @@ class DatabaseSeeder extends Seeder
                 'role' => 'admin', // 👈 المدير الثاني - للوصول إلى /admin
             ],
             [
-                'name' => 'Omar(Employee)',
+                'name' => 'Omar Mohamed',
                 'email' => 'omarmetwaly888@gmail.com',
                 'password' => Hash::make('12345678'),
+                'role' => 'user', // 👈 مستخدم عادي - للوصول إلى /user
+            ],
+            [
+                'name' => 'Yousof Fetyani',
+                'email' => 'Yousof.fetyani@gmail.com',
+                'password' => Hash::make('12345678'), 
+                'role' => 'user', // 👈 مستخدم عادي - للوصول إلى /user
+            ],
+            [
+                'name' => 'Ali Mohammed',
+                'email' => 'alimohamed5131@gmail.com',
+                'password' => Hash::make('12345678'), 
                 'role' => 'user', // 👈 مستخدم عادي - للوصول إلى /user
             ],
         ];
