@@ -31,11 +31,12 @@ Route::middleware('auth')->group(function () {
 
 Route::middleware(['auth','role:admin'])->group(function(): void{ // 👈 تطبيق دور 'admin'
     // تم استبدال المسار المؤقت بـ Livewire Component
-    Volt::route('register', 'auth.register')
+    //Volt::route('register', 'auth.register')
    // ->name('register'); 
     //كتبته هنا عشان مش اي احد يقدر يدخل كمستخدم
-    ->middleware(['auth','role:admin'])
-    ->name('admin.dashboard'); 
+    //->middleware(['auth','role:admin'])
+   Route::get('/admin/dashboard', App\Livewire\AdminDashboard::class) 
+        ->name('admin.dashboard'); 
 });
 
 Route::post('logout', App\Livewire\Actions\Logout::class)

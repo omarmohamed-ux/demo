@@ -2,7 +2,7 @@
     <div>
         <div class="text-center">
                 <h2 class="text-2xl md:text-4xl p-7 font-bold"><strong class="text-green-600">الحضور / الخروج الخاص بي</strong></h2>
-                <p class="opacity-70">يرجى فتح تحديد الموقع (اللوكيشن) لكي تستطيع تسجيل الحضور او الانصراف📍</p>
+                <p class="opacity-70"><strong class="text-gray-700">يرجى فتح تحديد الموقع (اللوكيشن) لكي تستطيع تسجيل الحضور او الانصراف📍</strong></p>
         </div>
         <script>
             // ✅ التعريف الآمن لـ CSRF Token كمتغير عام
@@ -79,7 +79,7 @@
                     document.getElementById('geo-status').innerText = '⚠️ يرجى أولاً جلب الإحداثيات بالزر الأول.';
                 }
             }
-    </script>
+        </script>
         {{-- رسائل نجاح أو خطأ (يمكنك إضافة منطق لعرض رسائل الجلسة هنا) --}}
         <div style="margin-bottom: 16px;">
             {{-- عرض حالة تحديد الموقع --}}
@@ -102,68 +102,63 @@
             @endif 
         </div>
         
-        <hr style="margin-bottom: 16px;"> 
+        <strong class="text-green-600"><hr style="margin-bottom: 16px;"></strong> 
 
         {{-- جدول يعرض كل سجلات المستخدم --}}
-        <div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
-        <table class="min-w-full divide-y divide-gray-200">
-            
-            {{-- ❌ حذف <thead> الأصلي هنا --}}
-            
-            <tbody class="bg-white divide-y divide-gray-200">
-                
-                {{-- ✅ التكرار على السجلات --}}
-                @foreach($records as $index => $record)
-                    
-                    {{-- 🛑 إضافة رؤوس الأعمدة قبل الصف الأول فقط (اختياري، لكنه أنظف) --}}
-                    @if ($loop->first)
-                        <tr class="bg-gray-100">
-                            <th class="px-6 py-3 text-right text-sm font-semibold text-gray-700 uppercase tracking-wider">التاريخ</th>
-                            <th class="px-6 py-3 text-right text-sm font-semibold text-gray-700 uppercase tracking-wider">وقت الدخول</th>
-                            <th class="px-6 py-3 text-right text-sm font-semibold text-gray-700 uppercase tracking-wider">وقت المغادرة</th>
-                            <th class="px-6 py-3 text-right text-sm font-semibold text-gray-700 uppercase tracking-wider">مدة الحضور</th>
-                            <th class="px-6 py-3 text-right text-sm font-semibold text-gray-700 uppercase tracking-wider">حالة الحضور</th>
-                        </tr>
-                    @endif
-                    
-                    @php
-                        $dailyStatus = $this->getDailyStatusAndColor($record);
-                        $colorClass = ($dailyStatus['status'] === '🟢 تم تحقيق الوقت المطلوب') ? 'text-green-600' : 
-                                        (($dailyStatus['status'] === '🟡 أقل من الوقت المطلوب') ? 'text-yellow-600' : 'text-red-600');
-                        $rowClass = $loop->odd ? 'bg-white' : 'bg-gray-50'; // تظليل الصفوف
-                    @endphp
-            
-                    <tr class="{{ $rowClass }}">
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                            {{ \Carbon\Carbon::parse($record->created_at)->isoFormat('dddd، D MMMM YYYY') }}
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                            {{ $record->check_in ? $record->check_in->format('h:i A') : '-' }}
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                            {{ $record->check_out ? $record->check_out->format('h:i A') : '-' }}
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                            @if ($record->duration !== null)
-                                @php
-                                    $minutes = $record->duration;
-                                    $hours = floor($minutes / 60);
-                                    $remainingMinutes = $minutes % 60;
-                                @endphp
-                                {{ $hours }}h : {{ str_pad($remainingMinutes, 2, '0', STR_PAD_LEFT) }}m
-                            @else
-                                -
-                            @endif
-                        </td>
-                        {{-- عرض حالة اليوم --}}
-                        <td class="px-6 py-4 whitespace-nowrap text-sm font-semibold {{ $colorClass }}">
-                            {{ $dailyStatus['status'] }}
-                        </td>
+        <div class="w-full overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-200">
+                <thead>
+                    <tr class="bg-gray-100">
+                        <th class="px-6 py-3 text-right text-sm font-semibold text-gray-700 uppercase tracking-wider">التاريخ</th>
+                        <th class="px-6 py-3 text-right text-sm font-semibold text-gray-700 uppercase tracking-wider">وقت الدخول</th>
+                        <th class="px-6 py-3 text-right text-sm font-semibold text-gray-700 uppercase tracking-wider">وقت المغادرة</th>
+                        <th class="px-6 py-3 text-right text-sm font-semibold text-gray-700 uppercase tracking-wider">مدة الحضور</th>
+                        <th class="px-6 py-3 text-right text-sm font-semibold text-gray-700 uppercase tracking-wider">حالة الحضور</th>
                     </tr>
-                @endforeach
-            </tbody>
-        </table>
-</div>
+                </thead>
+                <tbody class="bg-white divide-y divide-gray-200">
+                    
+                    {{-- ✅ التكرار على السجلات --}}
+                    @foreach($records as $index => $record)
+                        
+                        @php
+                            $dailyStatus = $this->getDailyStatusAndColor($record);
+                            $colorClass = ($dailyStatus['status'] === '🟢 تم تحقيق الوقت المطلوب') ? 'text-green-600' : 
+                                            (($dailyStatus['status'] === '🟡 أقل من الوقت المطلوب') ? 'text-yellow-600' : 'text-red-600');
+                            $rowClass = $loop->odd ? 'bg-white' : 'bg-gray-50'; // تظليل الصفوف
+                        @endphp
+                
+                        <tr class="{{ $rowClass }}">
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
+                                {{ \Carbon\Carbon::parse($record->created_at)->isoFormat('dddd، D MMMM YYYY') }}
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
+                                {{ $record->check_in ? $record->check_in->format('h:i A') : '-' }}
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
+                                {{ $record->check_out ? $record->check_out->format('h:i A') : '-' }}
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
+                                @if ($record->duration !== null)
+                                    @php
+                                        $minutes = $record->duration;
+                                        $hours = floor($minutes / 60);
+                                        $remainingMinutes = $minutes % 60;
+                                    @endphp
+                                    {{ $hours }}h : {{ str_pad($remainingMinutes, 2, '0', STR_PAD_LEFT) }}m
+                                @else
+                                    -
+                                @endif
+                            </td>
+                            {{-- عرض حالة اليوم --}}
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-semibold {{ $colorClass }}">
+                                {{ $dailyStatus['status'] }}
+                            </td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
         
         <form method="POST" action="{{ route('logout') }}">
             @csrf 

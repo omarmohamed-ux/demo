@@ -46,16 +46,29 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/employeetaskview', EmployeeTaskView::class)->name('employee.view');
 });
 
-Route::middleware(['auth','role:user'])->group(function(){ // 👈 تطبيق دور 'user'
-    // تم استبدال المسار المؤقت بـ Livewire Component
-    Route::get('/user', UserDashboard::class)->name('user.dashboard'); 
-    Route::get('/dashboard', UserDashboard::class)->name('dashboard'); 
+Route::middleware(['auth','role:user'])->group(function(){ 
+    Route::get('/user', App\Livewire\UserDashboard::class)->name('user.dashboard'); 
 });
 
-Route::middleware(['auth','role:admin'])->group(function(): void{ // 👈 تطبيق دور 'admin'
-    // تم استبدال المسار المؤقت بـ Livewire Component
-    Route::get('/admin', AdminDashboard::class)->name('admin.dashboard'); 
-    Route::get('/dashboard', AdminDashboard::class)->name('dashboard'); 
+Route::middleware(['auth','role:admin'])->group(function(): void{
+    Route::get('/admin', App\Livewire\AdminDashboard::class)->name('admin.dashboard'); 
+});
+
+Route::middleware(['auth'])->group(function () {
+    
+    Route::get('/dashboard', function () {
+        
+        $user = auth()->user(); 
+        
+        // التحقق الشرطي والتوجيه (هذا هو المنطق الوحيد الآن)
+        if ($user->role === 'admin') {
+            return redirect()->route('admin.dashboard'); 
+        }
+        
+        // إذا لم يكن المدير، وجهه إلى صفحة المستخدم العادي
+        return redirect()->route('user.dashboard'); 
+        
+    })->name('dashboard'); 
 });
     // دالة لحساب المسافة باستخدام Haversine Formula
 if (! function_exists('calculateDistance')) {
