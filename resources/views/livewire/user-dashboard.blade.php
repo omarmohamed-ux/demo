@@ -1,8 +1,8 @@
 <div>
     <div>
         <div class="text-center">
-                <h2 class="text-2xl md:text-4xl p-7 font-bold"><strong class="text-green-600">الحضور / الخروج الخاص بي</strong></h2>
-                <p class="opacity-70"><strong class="text-gray-700">يرجى فتح تحديد الموقع (اللوكيشن) لكي تستطيع تسجيل الحضور او الانصراف📍</strong></p>
+                <h2 class="text-2xl md:text-4xl p-7 font-bold"><strong class="text-green-600">My attendance/departure</strong></h2>
+                <p class="opacity-70"><strong class="text-gray-700">Please enable location services to record your attendance or departure.📍</strong></p>
         </div>
         <script>
             // ✅ التعريف الآمن لـ CSRF Token كمتغير عام
@@ -14,7 +14,7 @@
             let lng = null;
             // دالة الزر الأول: تجلب وتخزن
             function getLocationAndCheckIn() {
-                document.getElementById('geo-status').innerText = 'جاري تحديد موقعك... 🌐';
+                document.getElementById('geo-status').innerText = 'Your location is being determined... 🌐';
                 
                 if (navigator.geolocation) {
                     navigator.geolocation.getCurrentPosition(
@@ -29,7 +29,7 @@
                                 sendCheckRequest(lat, lng); // استدعاء الدالة الثانية هنا
                         },
                         (error) => {
-                            document.getElementById('geo-status').innerText = '🚫 فشل تحديد الموقع: يرجى تمكين الموقع.';
+                            document.getElementById('geo-status').innerText = ' Location detection failed: Please enable location services.🚫';
                             lat = null; // تفريغ القيمة في حالة الخطأ
                             lng = null;
                         },
@@ -41,7 +41,7 @@
             }
             function sendCheckRequest(lat, lng) {
                 if (lat && lng) { 
-                    document.getElementById('geo-status').innerText = 'جاري إرسال الإحداثيات للمقارنة...';
+                    document.getElementById('geo-status').innerText = 'The coordinates are being sent for comparison...';
                     //يرسل مفتاح الامان CSRF    
                    // csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
                     // :اسم المسار هو 'api.check.location'
@@ -89,15 +89,15 @@
             {{-- أزرار Check in/out --}}
              @if ($currentAttendance)
                 <button wire:click="checkOut" class="bg-red-600 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-lg shadow-md transition duration-300 ease-in-out">
-                   تسجيل المغادرة الآن
+                   Log out now
                 </button>
                     <h2 style="font-size: 1.7rem; font-weight: bold; margin-bottom: 7px;">
-                        {{ auth()->user()->name }} ,مرحباً بك 
+                        {{ auth()->user()->name }} ,Welcome
                     </h2>
                     <p>{{ $currentAttendance->created_at->isoFormat('dddd، D MMMM YYYY') }} {{ $currentAttendance->check_in->format('h:i A') }} :تم تسجيل دخولك في </P>
             @else
                 <button onclick="getLocationAndCheckIn();" class="bg-green-600 hover:bg-green-600 text-white font-bold py-2 px-4 rounded-lg shadow-md transition duration-300">
-                    تسجيل دخول الآن
+                    Log in now
                 </button>
             @endif 
         </div>
@@ -109,11 +109,11 @@
             <table class="min-w-full divide-y divide-gray-200">
                 <thead>
                     <tr class="bg-gray-100">
-                        <th class="px-6 py-3 text-right text-sm font-semibold text-gray-700 uppercase tracking-wider">التاريخ</th>
-                        <th class="px-6 py-3 text-right text-sm font-semibold text-gray-700 uppercase tracking-wider">وقت الدخول</th>
-                        <th class="px-6 py-3 text-right text-sm font-semibold text-gray-700 uppercase tracking-wider">وقت المغادرة</th>
-                        <th class="px-6 py-3 text-right text-sm font-semibold text-gray-700 uppercase tracking-wider">مدة الحضور</th>
-                        <th class="px-6 py-3 text-right text-sm font-semibold text-gray-700 uppercase tracking-wider">حالة الحضور</th>
+                    <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700 uppercase tracking-wider">the date</th>
+                    <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700 uppercase tracking-wider">Entry time</th>
+                    <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700 uppercase tracking-wider">departure time</th>
+                    <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700 uppercase tracking-wider">Duration of attendance </th>
+                    <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700 uppercase tracking-wider">Attendance status</th>
                     </tr>
                 </thead>
                 <tbody class="bg-white divide-y divide-gray-200">
@@ -123,8 +123,8 @@
                         
                         @php
                             $dailyStatus = $this->getDailyStatusAndColor($record);
-                            $colorClass = ($dailyStatus['status'] === '🟢 تم تحقيق الوقت المطلوب') ? 'text-green-600' : 
-                                            (($dailyStatus['status'] === '🟡 أقل من الوقت المطلوب') ? 'text-yellow-600' : 'text-red-600');
+                            $colorClass = ($dailyStatus['status'] === '🟢 The required time has been achieved.') ? 'text-green-600' : 
+                                            (($dailyStatus['status'] === '🟡 Less time than required') ? 'text-yellow-600' : 'text-red-600');
                             $rowClass = $loop->odd ? 'bg-white' : 'bg-gray-50'; // تظليل الصفوف
                         @endphp
                 

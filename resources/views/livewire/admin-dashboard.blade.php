@@ -1,17 +1,17 @@
 <div>
     <div>
         <h2 class="text-2xl md:text-4xl p-5 font-bold mx-auto w-fit">
-            <strong class="text-green-600">سجلات حضور جميع الموظفين</strong>
+            <strong class="text-green-600">Attendance records for all employees</strong>
         </h2>
         <table class="min-w-full divide-y divide-gray-200">
             
             <thead>
                 <tr class="bg-gray-100">
-                    <th class="px-6 py-3 text-right text-sm font-semibold text-gray-700 uppercase tracking-wider">التاريخ</th>
-                    <th class="px-6 py-3 text-right text-sm font-semibold text-gray-700 uppercase tracking-wider">وقت الدخول</th>
-                    <th class="px-6 py-3 text-right text-sm font-semibold text-gray-700 uppercase tracking-wider">وقت المغادرة</th>
-                    <th class="px-6 py-3 text-right text-sm font-semibold text-gray-700 uppercase tracking-wider">مدة الحضور</th>
-                    <th class="px-6 py-3 text-right text-sm font-semibold text-gray-700 uppercase tracking-wider">حالة الحضور</th>
+                    <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700 uppercase tracking-wider">the date</th>
+                    <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700 uppercase tracking-wider">Entry time</th>
+                    <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700 uppercase tracking-wider">departure time</th>
+                    <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700 uppercase tracking-wider">Duration of attendance </th>
+                    <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700 uppercase tracking-wider">Attendance status</th>
                 </tr>
             </thead>
             
@@ -30,8 +30,8 @@
                     @foreach($userRecords as $index => $record)
                         @php
                             $dailyStatus = $this->getDailyStatusAndColor($record);
-                            $colorClass = ($dailyStatus['status'] === '🟢 تم تحقيق الوقت المطلوب') ? 'text-green-600' : 
-                                          (($dailyStatus['status'] === '🟡 أقل من الوقت المطلوب') ? 'text-yellow-600' : 'text-red-600');
+                            $colorClass = ($dailyStatus['status'] === '🟢 The required time has been achieved.') ? 'text-green-600' : 
+                                          (($dailyStatus['status'] === '🟡 Less time than required') ? 'text-yellow-600' : 'text-red-600');
                             $rowClass = $loop->odd ? 'bg-white' : 'bg-gray-50'; // تظليل الصفوف
                         @endphp
                         
