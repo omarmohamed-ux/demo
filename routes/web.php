@@ -117,7 +117,7 @@ Route::post('/api/check-location', function (Request $request) {
     if ($distance > $allowedDistanceMeters) {
         return response()->json([
             'status' => 'error',
-            'message' => "يرجو تسجيل الحضور من داخل موقع العمل. أنت تبعد مسافة {$distance_m} متر عن الموقع",
+            'message' => "Please check in from within the work site. You are {$distance_m} meters from the site.",
         ], 200);
     }
     Attendance::create([
@@ -129,7 +129,7 @@ Route::post('/api/check-location', function (Request $request) {
     //النجاح
     return response()->json([
         'status' => 'success',
-        'message' => 'تم تسجيل الدخول بنجاح من داخل موقع العمل.',
+        'message' => 'Successful login from within the work site.',
     ], 200);
 
 })->middleware('auth')->name('api.check.location'); 

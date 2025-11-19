@@ -92,9 +92,9 @@
                    Log out now
                 </button>
                     <h2 style="font-size: 1.7rem; font-weight: bold; margin-bottom: 7px;">
-                        {{ auth()->user()->name }} ,Welcome
+                        Welcome, {{ auth()->user()->name }} 
                     </h2>
-                    <p>{{ $currentAttendance->created_at->isoFormat('dddd، D MMMM YYYY') }} {{ $currentAttendance->check_in->format('h:i A') }} :تم تسجيل دخولك في </P>
+                    <p>You have logged in: {{ $currentAttendance->created_at->isoFormat('dddd، D MMMM YYYY') }} {{ $currentAttendance->check_in->format('h:i A') }}</P>
             @else
                 <button onclick="getLocationAndCheckIn();" class="bg-green-600 hover:bg-green-600 text-white font-bold py-2 px-4 rounded-lg shadow-md transition duration-300">
                     Log in now
