@@ -99,7 +99,7 @@ Route::post('/api/check-location', function (Request $request) {
     }
 
     //جلب إعدادات الموقع
-    $workLocation = Location::find(1); 
+    $workLocation = Location::find(2); 
     if (!$workLocation) {
          return response()->json(['status' => 'error', 'message' => '⚠️ لم يتم إعداد إحداثيات مركز العمل.'], 400);
     }
