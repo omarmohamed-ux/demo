@@ -1,4 +1,5 @@
 <?php
+use App\Livewire\Employee;
 use App\Models\Location;
 use App\Models\Attendance;
 //Requestكلاس لجلب إعدادات الموقع 
@@ -39,7 +40,13 @@ Route::get('/infoTable', InfoBookTable::class)->name('info.table');
 Route::get('/editall/{bookId}', EditAll::class)->name('edit.all');
 Route::get('/productPage', ProductPage::class)->name('products');
 Route::get('/cartPage', CartPage::class)->name('cart');
-
+Route::get('/employee', Employee::class)->name('employee');
+Route::get('lang/{locale}', function ($locale) {
+    if (in_array($locale, ['ar', 'en'])) {
+        session()->put('locale', $locale);
+    }
+    return redirect()->back();
+})->name('lang.switch');
 Route::middleware(['auth'])->group(function () {
     // ✅ نقل المسارات هنا لضمان أن auth()->id() يعمل
     Route::get('/taskmanager', TaskManager::class)->name('manager.dashboard');

@@ -1,17 +1,23 @@
 <div>
     <div>
+        <div style="position: fixed; top: 15px; {{ app()->getLocale() == 'ar' ? 'left: 15px;' : 'right: 15px;' }} z-index: 9999;">
+            <a href="{{ route('lang.switch', app()->getLocale() == 'ar' ? 'en' : 'ar') }}" 
+            style="background: #ffffff; color: #1f2937; padding: 8px 16px; border-radius: 8px; border: 1px solid #ddd; text-decoration: none; font-weight: bold; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                {{ app()->getLocale() == 'ar' ? 'English' : 'العربية' }}
+            </a>
+        </div>
         <h2 class="text-2xl md:text-4xl p-5 font-bold mx-auto w-fit">
-            <strong class="text-green-600">Attendance records for all employees</strong>
+            <strong class="text-green-600">{{ __('messages.Attendance records for all employees') }}</strong>
         </h2>
         <table class="min-w-full divide-y divide-gray-200">
             
             <thead>
                 <tr class="bg-gray-100">
-                    <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700 uppercase tracking-wider">the date</th>
-                    <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700 uppercase tracking-wider">Entry time</th>
-                    <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700 uppercase tracking-wider">departure time</th>
-                    <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700 uppercase tracking-wider">Duration of attendance </th>
-                    <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700 uppercase tracking-wider">Attendance status</th>
+                    <th class="px-6 py-3 text-start text-sm font-semibold text-gray-700 uppercase tracking-wider">{{ __('messages.date') }}</th>
+                    <th class="px-6 py-3 text-start text-sm font-semibold text-gray-700 uppercase tracking-wider">{{ __('messages.entry_time') }}</th>
+                    <th class="px-6 py-3 text-start text-sm font-semibold text-gray-700 uppercase tracking-wider">{{ __('messages.departure time') }}</th>
+                    <th class="px-6 py-3 text-start text-sm font-semibold text-gray-700 uppercase tracking-wider">{{ __('messages.Duration of attendance ') }}</th>
+                    <th class="px-6 py-3 text-start text-sm font-semibold text-gray-700 uppercase tracking-wider">{{ __('messages.Attendance status') }}</th>
                 </tr>
             </thead>
             
@@ -69,7 +75,7 @@
             @csrf 
             <button type="submit" 
                 class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-lg shadow-md transition duration-300">
-                logout
+                {{ __('messages.logout') }}
             </button>
         </form>
     </div>

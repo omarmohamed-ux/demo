@@ -1,8 +1,14 @@
 <div>
     <div>
+        <div style="position: fixed; top: 15px; {{ app()->getLocale() == 'ar' ? 'left: 15px;' : 'right: 15px;' }} z-index: 9999;">
+            <a href="{{ route('lang.switch', app()->getLocale() == 'ar' ? 'en' : 'ar') }}" 
+            style="background: #ffffff; color: #1f2937; padding: 8px 16px; border-radius: 8px; border: 1px solid #ddd; text-decoration: none; font-weight: bold; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                {{ app()->getLocale() == 'ar' ? 'English' : 'العربية' }}
+            </a>
+        </div>
         <div class="text-center">
-                <h2 class="text-2xl md:text-4xl p-7 font-bold"><strong class="text-green-600">My attendance/departure</strong></h2>
-                <p class="opacity-70"><strong class="text-gray-700">Please enable location services to record your attendance or departure.📍</strong></p>
+                <h2 class="text-2xl md:text-4xl p-7 font-bold"><strong class="text-green-600">{{ __('messages.attendance_title') }}</strong></h2>
+                <p class="opacity-70"><strong class="text-gray-700">{{ __('messages.confirmation') }}</strong></p>
         </div>
         <script>
             // ✅ التعريف الآمن لـ CSRF Token كمتغير عام
@@ -29,7 +35,7 @@
                                 sendCheckRequest(lat, lng); // استدعاء الدالة الثانية هنا
                         },
                         (error) => {
-                            document.getElementById('geo-status').innerText = ' Location detection failed: Please enable location services.🚫';
+                            document.getElementById('geo-status').innerText = '{{ __("messages.failed_location") }}';
                             lat = null; // تفريغ القيمة في حالة الخطأ
                             lng = null;
                         },
@@ -89,15 +95,15 @@
             {{-- أزرار Check in/out --}}
              @if ($currentAttendance)
                 <button wire:click="checkOut" class="bg-red-600 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-lg shadow-md transition duration-300 ease-in-out">
-                   Log out now
+                   {{ __('messages.log_out_now') }}
                 </button>
                     <h2 style="font-size: 1.7rem; font-weight: bold; margin-bottom: 7px;">
-                        Welcome, {{ auth()->user()->name }} 
+                        {{ __('messages.welcome') }}, {{ auth()->user()->name }} 
                     </h2>
-                    <p>You have logged in: {{ $currentAttendance->created_at->isoFormat('dddd، D MMMM YYYY') }} {{ $currentAttendance->check_in->format('h:i A') }}</P>
+                    <p>{{ __('messages.You have logged in') }}: {{ $currentAttendance->created_at->isoFormat('dddd، D MMMM YYYY') }} {{ $currentAttendance->check_in->format('h:i A') }}</P>
             @else
                 <button onclick="getLocationAndCheckIn();" class="bg-green-600 hover:bg-green-600 text-white font-bold py-2 px-4 rounded-lg shadow-md transition duration-300">
-                    Log in now
+                    {{ __('messages.take_attendance_now') }}
                 </button>
             @endif 
         </div>
@@ -109,11 +115,11 @@
             <table class="min-w-full divide-y divide-gray-200">
                 <thead>
                     <tr class="bg-gray-100">
-                    <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700 uppercase tracking-wider">the date</th>
-                    <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700 uppercase tracking-wider">Entry time</th>
-                    <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700 uppercase tracking-wider">departure time</th>
-                    <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700 uppercase tracking-wider">Duration of attendance </th>
-                    <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700 uppercase tracking-wider">Attendance status</th>
+                    <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700 uppercase tracking-wider">{{ __('messages.date') }}</th>
+                    <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700 uppercase tracking-wider">{{ __('messages.entry_time') }}</th>
+                    <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700 uppercase tracking-wider">{{ __('messages.departure time') }}</th>
+                    <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700 uppercase tracking-wider">{{ __('messages.Duration of attendance ') }}</th>
+                    <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700 uppercase tracking-wider">{{ __('messages.Attendance status') }}</th>
                     </tr>
                 </thead>
                 <tbody class="bg-white divide-y divide-gray-200">
@@ -164,7 +170,7 @@
             @csrf 
             <button type="submit" 
                 class="bg-red-600 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-lg shadow-md transition duration-300">
-                logout
+                {{ __('messages.logout') }}
             </button>
         </form>
     </div>
