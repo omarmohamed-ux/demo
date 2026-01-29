@@ -1,11 +1,28 @@
 <div>
     <div>
-        <div style="position: fixed; top: 15px; {{ app()->getLocale() == 'ar' ? 'left: 15px;' : 'right: 15px;' }} z-index: 9999;">
-            <a href="{{ route('lang.switch', app()->getLocale() == 'ar' ? 'en' : 'ar') }}" 
-            style="background: #ffffff; color: #1f2937; padding: 8px 16px; border-radius: 8px; border: 1px solid #ddd; text-decoration: none; font-weight: bold; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
-                {{ app()->getLocale() == 'ar' ? 'English' : 'العربية' }}
-            </a>
-        </div>
+        <nav class="bg-gray-800 p-4">
+            <div class="container mx-auto flex justify-between items-center">
+                @auth
+                    <h1 class="text-white mr-4 mt-4 text-1 font-bold">
+                        {{ __('messages.Welcome') }}, 
+                        <span class="text-white">{{ auth()->user()->name }}</span>
+                    </h1>
+                @endauth
+                <div class="flex items-center gap-2 mr-4 mt-4{{ app()->getLocale() == 'ar' ? 'left: 15px;' : 'right: 15px;' }} z-index: 9999;">
+                        <a href="{{ route('lang.switch', app()->getLocale() == 'ar' ? 'en' : 'ar') }}" 
+                            class="bg-white text-gray-800 px-4 py-2 rounded-lg border border-gray-300 font-bold shadow-sm hover:bg-gray-50 transition duration-200 text-sm">
+                            {{ app()->getLocale() == 'ar' ? 'English' : 'العربية' }}
+                        </a>
+                    <form method="POST" action="{{ route('logout')}}">
+                        @csrf 
+                        <button type="submit" 
+                            class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-lg shadow-md transition duration-300">
+                            {{ __('messages.logout') }}
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </nav>
         <div class="text-center">
                 <h2 class="text-2xl md:text-4xl p-7 font-bold"><strong class="text-green-600">{{ __('messages.attendance_title') }}</strong></h2>
                 <p class="opacity-70"><strong class="text-gray-700">{{ __('messages.confirmation') }}</strong></p>
@@ -115,11 +132,11 @@
             <table class="min-w-full divide-y divide-gray-200">
                 <thead>
                     <tr class="bg-gray-100">
-                    <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700 uppercase tracking-wider">{{ __('messages.date') }}</th>
-                    <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700 uppercase tracking-wider">{{ __('messages.entry_time') }}</th>
-                    <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700 uppercase tracking-wider">{{ __('messages.departure time') }}</th>
-                    <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700 uppercase tracking-wider">{{ __('messages.Duration of attendance ') }}</th>
-                    <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700 uppercase tracking-wider">{{ __('messages.Attendance status') }}</th>
+                    <th class="px-6 py-3 text-start text-sm font-semibold text-gray-700 uppercase tracking-wider">{{ __('messages.date') }}</th>
+                    <th class="px-6 py-3 text-start text-sm font-semibold text-gray-700 uppercase tracking-wider">{{ __('messages.entry_time') }}</th>
+                    <th class="px-6 py-3 text-start text-sm font-semibold text-gray-700 uppercase tracking-wider">{{ __('messages.departure time') }}</th>
+                    <th class="px-6 py-3 text-start text-sm font-semibold text-gray-700 uppercase tracking-wider">{{ __('messages.Duration of attendance ') }}</th>
+                    <th class="px-6 py-3 text-start text-sm font-semibold text-gray-700 uppercase tracking-wider">{{ __('messages.Attendance status') }}</th>
                     </tr>
                 </thead>
                 <tbody class="bg-white divide-y divide-gray-200">
@@ -129,8 +146,8 @@
                         
                         @php
                             $dailyStatus = $this->getDailyStatusAndColor($record);
-                            $colorClass = ($dailyStatus['status'] === '🟢 The required time has been achieved.') ? 'text-green-600' : 
-                                            (($dailyStatus['status'] === '🟡 Less time than required') ? 'text-yellow-600' : 'text-red-600');
+                            $colorClass = ($dailyStatus['status'] === __('messages.🟢 The required time has been achieved.')) ? 'text-green-600' : 
+                                            (($dailyStatus['status'] === __('messages.🟡 Less time than required')) ? 'text-yellow-600' : 'text-red-600');
                             $rowClass = $loop->odd ? 'bg-white' : 'bg-gray-50'; // تظليل الصفوف
                         @endphp
                 
@@ -165,13 +182,6 @@
                 </tbody>
             </table>
         </div>
-        
-        <form method="POST" action="{{ route('logout') }}">
-            @csrf 
-            <button type="submit" 
-                class="bg-red-600 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-lg shadow-md transition duration-300">
-                {{ __('messages.logout') }}
-            </button>
-        </form>
+        <hr class="my-6 border-gray-300">
     </div>
 </div>

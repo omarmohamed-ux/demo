@@ -1,11 +1,28 @@
 <div>
     <div>
-        <div style="position: fixed; top: 15px; {{ app()->getLocale() == 'ar' ? 'left: 15px;' : 'right: 15px;' }} z-index: 9999;">
-            <a href="{{ route('lang.switch', app()->getLocale() == 'ar' ? 'en' : 'ar') }}" 
-            style="background: #ffffff; color: #1f2937; padding: 8px 16px; border-radius: 8px; border: 1px solid #ddd; text-decoration: none; font-weight: bold; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
-                {{ app()->getLocale() == 'ar' ? 'English' : 'العربية' }}
-            </a>
-        </div>
+        <nav class="bg-gray-800 p-4">
+            <div class="container mx-auto flex justify-between items-center">
+                @auth
+                    <h1 class="text-white mr-4 mt-4 text-1 font-bold">
+                        {{ __('messages.Welcome admin') }}, 
+                        <span class="text-white">{{ auth()->user()->name }}</span>
+                    </h1>
+                @endauth
+                <div class="flex items-center gap-2 mr-4 mt-4{{ app()->getLocale() == 'ar' ? 'left: 15px;' : 'right: 15px;' }} z-index: 9999;">
+                        <a href="{{ route('lang.switch', app()->getLocale() == 'ar' ? 'en' : 'ar') }}" 
+                            class="bg-white text-gray-800 px-4 py-2 rounded-lg border border-gray-300 font-bold shadow-sm hover:bg-gray-50 transition duration-200 text-sm">
+                            {{ app()->getLocale() == 'ar' ? 'English' : 'العربية' }}
+                        </a>
+                    <form method="POST" action="{{ route('logout')}}">
+                        @csrf 
+                        <button type="submit" 
+                            class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-lg shadow-md transition duration-300">
+                            {{ __('messages.logout') }}
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </nav>
         <h2 class="text-2xl md:text-4xl p-5 font-bold mx-auto w-fit">
             <strong class="text-green-600">{{ __('messages.Attendance records for all employees') }}</strong>
         </h2>
@@ -29,15 +46,21 @@
                     <tr class="bg-gray-200">
                         <td colspan="5" class="px-6 py-2 text-left text-sm font-extrabold text-gray-900 uppercase">
                             {{ $userName }}
+                            <button popovertarget="employee-units-menu" class="flex items-center gap-x-1 text-sm/6 font-semibold text-white bg-cyan-600 px-4 py-2 rounded-lg hover:bg-cyan-900 transition">
+                            {{ $userName }}
+                                <svg viewBox="0 0 20 20" fill="currentColor" class="size-5 flex-none text-indigo-200">
+                                    <path d="M5.22 8.22a.75.75 0 0 1 1.06 0L10 11.94l3.72-3.72a.75.75 0 1 1 1.06 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L5.22 9.28a.75.75 0 0 1 0-1.06Z" />
+                                </svg>
+                            </button>
+                            <div id="employee-units-menu" anchor="bottom"></div>                              
                         </td>
                     </tr>
-
                     {{-- ✅ التكرار الثاني: التكرار على سجلات الموظف الواحد --}}
                     @foreach($userRecords as $index => $record)
                         @php
                             $dailyStatus = $this->getDailyStatusAndColor($record);
-                            $colorClass = ($dailyStatus['status'] === '🟢 The required time has been achieved.') ? 'text-green-600' : 
-                                          (($dailyStatus['status'] === '🟡 Less time than required') ? 'text-yellow-600' : 'text-red-600');
+                            $colorClass = ($dailyStatus['status'] === __('messages.🟢 The required time has been achieved.')) ? 'text-green-600' : 
+                                          (($dailyStatus['status'] === __('messages.🟡 Less time than required')) ? 'text-yellow-600' : 'text-red-600');
                             $rowClass = $loop->odd ? 'bg-white' : 'bg-gray-50'; // تظليل الصفوف
                         @endphp
                         
@@ -68,15 +91,10 @@
                             </td>
                         </tr>
                     @endforeach
+                </h1>    
                 @endforeach
             </tbody>
         </table>
-        <form method="POST" action="{{ route('logout')}}">
-            @csrf 
-            <button type="submit" 
-                class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-lg shadow-md transition duration-300">
-                {{ __('messages.logout') }}
-            </button>
-        </form>
+        <hr class="my-6 border-gray-300">
     </div>
 </div>

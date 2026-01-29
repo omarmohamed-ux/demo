@@ -140,7 +140,7 @@ class UserDashboard extends Component
         if (!($record->check_out)) {
             return [
                 'color' => 'bg-danger',   // أحمر: لسا ما عملش تسجيل خروج
-                'status' => '🔴 Waiting to log out',
+                'status' => __('messages.🔴 Waiting to log out'),
                 'duration' => $completedMinutes ,
                 'requiredMinutes' => $requiredMinutes ,
                 'requiredHours'=> $requiredHours 
@@ -151,7 +151,7 @@ class UserDashboard extends Component
         if ($record->duration >= $requiredMinutes) {
             return [
                 'color' => 'bg-success',  // أخضر: تم تحقيق 60 دقيقة أو أكثر
-                'status' => '🟢 The required time has been achieved.',
+                'status' => __('messages.🟢 The required time has been achieved.'),
                 'duration' => $completedMinutes,
                 'requiredMinutes' => $requiredMinutes,
                 'requiredHours'=> $requiredHours 
@@ -162,7 +162,7 @@ class UserDashboard extends Component
         else {
             return [
                 'color' => 'bg-warning',  // أصفر: أقل من 60 دقيقة
-                'status' => '🟡 Less time than required',
+                'status' => __('messages.🟡 Less time than required'),
                 'duration' => $completedMinutes,
                 'requiredMinutes' => $requiredMinutes,
                 'requiredHours'=> $requiredHours 
