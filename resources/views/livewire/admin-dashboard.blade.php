@@ -1,23 +1,33 @@
 <div>
     <div>
-        <nav class="bg-gray-800 p-4">
+        <nav class="bg-gray-800 p-6 rounded-b-lg shadow-md">
             <div class="container mx-auto flex justify-between items-center">
-                @auth
-                    <h1 class="text-white mr-4 mt-4 text-1 font-bold">
-                        {{ __('messages.Welcome admin') }}, 
-                        <span class="text-white">{{ auth()->user()->name }}</span>
-                    </h1>
-                @endauth
-                <div class="flex items-center gap-2 mr-4 mt-4{{ app()->getLocale() == 'ar' ? 'left: 15px;' : 'right: 15px;' }} z-index: 9999;">
-                        <a href="{{ route('lang.switch', app()->getLocale() == 'ar' ? 'en' : 'ar') }}" 
-                            class="bg-white text-gray-800 px-4 py-2 rounded-lg border border-gray-300 font-bold shadow-sm hover:bg-gray-50 transition duration-200 text-sm">
-                            {{ app()->getLocale() == 'ar' ? 'English' : 'العربية' }}
-                        </a>
-                    <form method="POST" action="{{ route('logout')}}">
-                        @csrf 
-                        <button type="submit" 
-                            class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-lg shadow-md transition duration-300">
-                            {{ __('messages.logout') }}
+                
+                <div class="flex items-center gap-4">
+                    <a href="/admin" class="-m-1.5 p-1.5">
+                        <span class="sr-only">Your Company</span>
+                        <img src="https://as2.ftcdn.net/jpg/04/92/02/53/1000_F_492025360_Ie3uQ8atn7SKumbIX1dj9eMJccHP8a5N.jpg" 
+                            alt="Logo" class="h-12 w-auto rounded" />
+                    </a>
+
+                    @auth
+                        <h1 class="text-white text-lg font-bold">
+                            {{ __('messages.Welcome admin') }}, 
+                            <span class="text-white">{{ auth()->user()->name }}</span>
+                        </h1>
+                    @endauth
+                </div>
+
+                <div class="flex items-center gap-2">
+                    <a href="{{ route('lang.switch', app()->getLocale() == 'ar' ? 'en' : 'ar') }}" 
+                    class="bg-white text-gray-800 px-4 py-2 rounded-lg border border-gray-300 font-bold shadow-sm hover:bg-gray-50 transition text-sm">
+                        {{ app()->getLocale() == 'ar' ? 'English' : 'العربية' }}
+                    </a>
+
+                    <form method="POST" action="{{ route('logout') }}">
+                        @csrf
+                        <button type="submit" class="bg-red-600 text-white px-4 py-2 rounded-lg font-bold shadow-sm hover:bg-red-700 transition text-sm">
+                            logout
                         </button>
                     </form>
                 </div>
