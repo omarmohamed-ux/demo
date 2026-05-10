@@ -6,15 +6,6 @@ use App\Models\Attendance;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Livewire\Volt\Volt;
-use App\Livewire\Test;
-use App\Livewire\UpdateCalulation;
-use App\Livewire\ViewBookDetails;
-use App\Livewire\AddBookType;
-use App\Livewire\UpdateDeleteBook;
-use App\Livewire\AddBook;
-use App\Livewire\AuthorsTable;
-use App\Livewire\InfoBookTable;
-use App\Livewire\EditAll;
 use App\Livewire\ProductPage;
 use App\Livewire\CartPage;
 use App\Livewire\TaskManager;
@@ -26,18 +17,7 @@ Route::get('/', function () {
     return view('welcome');
 })->name('home');
 
-//رابط صفحة تست 
-Route::get('/test', Test::class)->name('t');
 
-Route::get('/ubdateCalc', UpdateCalulation::class)->name('update.calc');
-Route::get('/update-calulation/{id}', UpdateCalulation::class)->name('test.update');
-Route::get('/viewbook', ViewBookDetails::class)->name('books.view');
-Route::get('/viewauthor', AuthorsTable::class)->name('author.view');
-Route::get('/addbooktype', AddBookType::class)->name('books.add');
-Route::get('/deletebook', UpdateDeleteBook::class)->name('books.delete');
-Route::get('/addbook', AddBook::class)->name('books.table');
-Route::get('/infoTable', InfoBookTable::class)->name('info.table');
-Route::get('/editall/{bookId}', EditAll::class)->name('edit.all');
 Route::get('/productPage', ProductPage::class)->name('products');
 Route::get('/cartPage', CartPage::class)->name('cart');
 Route::get('/employee', Employee::class)->name('employee');
