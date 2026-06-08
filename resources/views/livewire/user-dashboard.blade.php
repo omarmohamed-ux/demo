@@ -37,6 +37,7 @@
                 <h2 class="text-2xl md:text-4xl p-7 font-bold"><strong class="text-green-600">{{ __('messages.attendance_title') }}</strong></h2>
                 <p class="opacity-70"><strong class="text-gray-700">{{ __('messages.confirmation') }}</strong></p>
         </div>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
         <script>
             // ✅ التعريف الآمن لـ CSRF Token كمتغير عام
             const csrfToken = "{{ csrf_token() }}";
@@ -119,20 +120,66 @@
             <p id="geo-status" class="text-sm text-blue-600 font-semibold"></p>
             
 
-            {{-- أزرار Check in/out --}}
-             @if ($currentAttendance)
-                <button wire:click="checkOut" class="bg-red-600 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-lg shadow-md transition duration-300 ease-in-out">
-                   {{ __('messages.log_out_now') }}
+            {{-- أزرار Check in/out مطورة باستخدام SweetAlert2 --}}
+            @if ($currentAttendance)
+                <button type="button" 
+                        onclick="confirmCheckOut()" 
+                        class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-lg shadow-md transition duration-300 ease-in-out">
+                {{ __('messages.log_out_now') }}
                 </button>
-                    <h2 style="font-size: 1.7rem; font-weight: bold; margin-bottom: 7px;">
-                        {{ __('messages.welcome') }}, {{ auth()->user()->name }} 
-                    </h2>
-                    <p>{{ __('messages.You have logged in') }}: {{ $currentAttendance->created_at->isoFormat('dddd، D MMMM YYYY') }} {{ $currentAttendance->check_in->format('h:i A') }}</P>
+                
+                <h2 style="font-size: 1.7rem; font-weight: bold; margin-bottom: 7px;">
+                    {{ __('messages.welcome') }}, {{ auth()->user()->name }} 
+                </h2>
+                <p>{{ __('messages.You have logged in') }}: {{ $currentAttendance->created_at->isoFormat('dddd، D MMMM YYYY') }} {{ $currentAttendance->check_in->format('h:i A') }}</p>
             @else
-                <button onclick="getLocationAndCheckIn();" class="bg-green-600 hover:bg-green-600 text-white font-bold py-2 px-4 rounded-lg shadow-md transition duration-300">
+                <button type="button" 
+                        onclick="confirmCheckIn()" 
+                        class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg shadow-md transition duration-300">
                     {{ __('messages.take_attendance_now') }}
                 </button>
-            @endif 
+            @endif
+            <script>
+                // دالة التأكيد قبل تسجيل الحضور (Check In)
+                function confirmCheckIn() {
+                    Swal.fire({
+                        title: 'هل أنت متأكد؟',
+                        text: "هل تريد تسجيل حضورك الآن؟ سيتم التحقق من موقعك الجغرافي.",
+                        icon: 'question',
+                        showCancelButton: true,
+                        confirmButtonColor: '#16a34a', // لون أخضر متناسق مع تصميمك
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'نعم، سجل الحضور',
+                        cancelButtonText: 'إلغاء',
+                        reverseButtons: true // لجعل زر الموافقة على اليمين في الواجهات العربية
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            // استدعاء دالتك القديمة الأصلية المتخصصة في جلب الـ GPS
+                            getLocationAndCheckIn();
+                        }
+                    });
+                }
+
+                // دالة التأكيد قبل تسجيل الانصراف (Check Out)
+                function confirmCheckOut() {
+                    Swal.fire({
+                        title: 'هل أنت متأكد؟',
+                        text: "هل تريد تسجيل الانصراف وإنهاء فترة العمل الحالية؟",
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#dc2626', // لون أحمر
+                        cancelButtonColor: '#3085d6',
+                        confirmButtonText: 'نعم، سجل الانصراف',
+                        cancelButtonText: 'إلغاء',
+                        reverseButtons: true
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            // إخبار Livewire برمجياً بتنفيذ دالة الـ checkOut الموجودة في الكنترولر
+                            @this.call('checkOut');
+                        }
+                    });
+                }
+                </script>
         </div>
         
         <strong class="text-green-600"><hr style="margin-bottom: 16px;"></strong> 
