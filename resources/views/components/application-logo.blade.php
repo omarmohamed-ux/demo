@@ -1,1 +1,1 @@
-<img src="{{ asset('omar.ico') }}" alt="Logo" class="w-20 h-20 object-contain">
+<img src="{{ asset('omar.ico') }}" alt="Logo" class="w-20 h-10 object-contain">
