@@ -20,7 +20,7 @@ return Application::configure(basePath: dirname(__DIR__))
     ]);
         // $middleware->append(\App\Http\Middleware\LanguageMiddleware::class);    })
         $middleware->web(append: [
-        \App\Http\Middleware\LanguageMiddleware::class,
+        LanguageMiddleware::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

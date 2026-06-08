@@ -44,4 +44,13 @@
             </x-primary-button>
         </div>
     </form>
+
+    <hr class="my-6 border-gray-300 dark:border-white" />
+    <!-- Don't have an account? -->
+    @if (Route::has('register'))
+        <div class="space-x-1 text-sm text-center rtl:space-x-reverse text-gray-600 hover:text-gray-900">
+            <span>{{ __('Don\'t have an account?') }}</span>
+            <flux:link :href="route('register')" wire:navigate>{{ __('Sign up') }}</flux:link>
+        </div>
+    @endif
 </x-guest-layout>

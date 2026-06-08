@@ -19,9 +19,9 @@ use App\Livewire\AdminDashboard;
 | Public Routes (الروابط العامة)
 |--------------------------------------------------------------------------
 */
-Route::get('/', function () {
-    return view('welcome');
-})->name('home');
+
+// إعادة توجيه الصفحة الرئيسية إلى صفحة تسجيل الدخول
+Route::redirect('/', '/login')->name('home');
 
 // تغيير اللغة
 Route::get('lang/{locale}', function ($locale) {

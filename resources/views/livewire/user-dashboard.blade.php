@@ -1,6 +1,6 @@
 <div>
     <div>
-        <nav class="bg-gray-800 p-6 rounded-b-lg shadow-md">
+        {{-- <nav class="bg-gray-800 p-6 rounded-b-lg shadow-md">
             <div class="container mx-auto flex justify-between items-center">
                 
                 <div class="flex items-center gap-4">
@@ -32,7 +32,7 @@
                     </form>
                 </div>
             </div>
-        </nav>
+        </nav> --}}
         <div class="text-center">
                 <h2 class="text-2xl md:text-4xl p-7 font-bold"><strong class="text-green-600">{{ __('messages.attendance_title') }}</strong></h2>
                 <p class="opacity-70"><strong class="text-gray-700">{{ __('messages.confirmation') }}</strong></p>
