@@ -21,7 +21,7 @@ use App\Livewire\AdminDashboard;
 */
 
 // إعادة توجيه الصفحة الرئيسية إلى صفحة تسجيل الدخول
-Route::redirect('/', '/login')->name('home');
+Route::redirect('/', '/login');
 
 // تغيير اللغة
 Route::get('lang/{locale}', function ($locale) {
